@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 async function request(path, options = {}, user) {
   if (!user) throw new Error('You must be signed in.');

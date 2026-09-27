@@ -1,0 +1,23 @@
+{
+  "name": "minimal-task-manager",
+  "private": true,
+  "version": "1.1.0",
+  "scripts": {
+    "install:all": "npm install && npm --prefix server install && npm --prefix client install",
+    "dev": "concurrently \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "dev:netlify": "netlify dev",
+    "build": "npm --prefix client run build",
+    "start": "npm --prefix server start"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "firebase-admin": "^13.5.0",
+    "serverless-http": "^3.2.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "netlify-cli": "^23.9.4"
+  }
+}
