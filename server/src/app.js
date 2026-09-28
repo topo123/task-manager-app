@@ -13,6 +13,28 @@ export function createApp() {
   }));
   app.use(express.json({ limit: '50kb' }));
 
+  // Netlify/serverless adapters can expose the request body as a string.
+  // Normalize it here so the API always receives an object for JSON requests.
+  app.use((req, res, next) => {
+    if (typeof req.body === 'string') {
+      try {
+        req.body = JSON.parse(req.body);
+      } catch {
+        return res.status(400).json({ error: 'Invalid JSON request body.' });
+      }
+    }
+
+    if (Buffer.isBuffer(req.body)) {
+      try {
+        req.body = JSON.parse(req.body.toString('utf8'));
+      } catch {
+        return res.status(400).json({ error: 'Invalid JSON request body.' });
+      }
+    }
+
+    next();
+  });
+
   app.get('/api/health', (_req, res) => res.json({ ok: true }));
 
   app.use('/api/tasks', requireAuth);
@@ -33,8 +55,9 @@ export function createApp() {
   });
 
   app.post('/api/tasks', async (req, res) => {
-    const title = typeof req.body.title === 'string' ? req.body.title.trim() : '';
-    if (!title || title.length > 200) return res.status(400).json({ error: 'Task title must be 1–200 characters.' });
+    const title = typeof req.body?.title === 'string' ? req.body.title.trim() : '';
+    if (!title) return res.status(400).json({ error: 'Task title is required.' });
+    if (title.length > 200) return res.status(400).json({ error: 'Task title must be 200 characters or fewer.' });
 
     try {
       const ref = tasks().doc();
@@ -58,7 +81,8 @@ export function createApp() {
     const allowed = {};
     if (typeof req.body.title === 'string') {
       const title = req.body.title.trim();
-      if (!title || title.length > 200) return res.status(400).json({ error: 'Task title must be 1–200 characters.' });
+      if (!title) return res.status(400).json({ error: 'Task title is required.' });
+      if (title.length > 200) return res.status(400).json({ error: 'Task title must be 200 characters or fewer.' });
       allowed.title = title;
     }
     if (typeof req.body.completed === 'boolean') allowed.completed = req.body.completed;
