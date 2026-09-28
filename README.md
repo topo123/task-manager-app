@@ -13,6 +13,10 @@ A minimalist full-stack task manager built with React/Vite, Express, Netlify Fun
 
 The Express application is shared between local development and Netlify Functions. Locally it runs on port 4000; on Netlify it is invoked as a serverless function behind `/api/*`.
 
+##Video
+https://youtu.be/FsW3NzlQTy8
+
+#Project Setup
 ## 1. Create the Firebase project
 
 In Firebase:
@@ -114,3 +118,6 @@ npm run dev:netlify
 ```
 
 This runs the Vite frontend together with Netlify's local function environment.
+
+##What is the project?
+This is a minimalist fast task manager web app for keeping track of tasks. A lot of task managers have a lot of unused features, this only gives you the necessary features.
